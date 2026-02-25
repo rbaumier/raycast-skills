@@ -1,0 +1,36 @@
+{
+  "name": "claude-skills-picker",
+  "title": "Claude Skills Picker",
+  "description": "Pick Claude Code skills and paste them as a comma-separated list",
+  "icon": "command-icon.png",
+  "author": "rbaumier",
+  "license": "MIT",
+  "commands": [
+    {
+      "name": "pick-skills",
+      "title": "Pick Claude Skills",
+      "description": "Select skills and paste them into the active app",
+      "mode": "view"
+    }
+  ],
+  "dependencies": {
+    "@raycast/api": "^1.93.2",
+    "@raycast/utils": "^1.19.1"
+  },
+  "devDependencies": {
+    "@raycast/eslint-config": "^1.0.11",
+    "@types/node": "22.13.10",
+    "@types/react": "19.0.10",
+    "eslint": "^8.57.1",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.2"
+  },
+  "scripts": {
+    "build": "ray build",
+    "dev": "ray develop",
+    "fix-lint": "ray lint --fix",
+    "lint": "ray lint",
+    "prepublishOnly": "echo \"Error: no publish\" && exit 1",
+    "publish": "npx @raycast/api@latest publish"
+  }
+}
