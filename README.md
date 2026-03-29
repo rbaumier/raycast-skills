@@ -48,7 +48,7 @@ Pick skills across folders. Selection persists as you navigate.
 
 ```bash
 git clone <repo-url> && cd raycast-skills
-npm install
+bun install
 ```
 
 Import into Raycast:
