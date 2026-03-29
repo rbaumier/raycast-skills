@@ -1,7 +1,6 @@
-/** Root view — category folders + uncategorized skills, with search across all. */
 import { List } from "@raycast/api";
 import type { Categories } from "./data/data";
-import type { PickerAction } from "./data/state";
+import { ACTION, type PickerAction } from "./data/state";
 import { CategoryItem } from "./categories/category-item";
 import { SkillItem } from "./skills/skill-item";
 
@@ -9,7 +8,6 @@ type RootViewProps = {
   categoryNames: string[];
   categories: Categories;
   skills: string[];
-  skillsSet: Set<string>;
   selected: Set<string>;
   searchText: string;
   lastCategory: string | null;
@@ -20,15 +18,27 @@ type RootViewProps = {
   onPaste: () => Promise<void>;
 };
 
+/** @description Root view — category folders + uncategorized skills, with cross-folder search. */
 export function RootView({
-  categoryNames, categories, skills, skillsSet, selected, searchText, lastCategory,
-  categorizedSkillSet, uncategorized, dispatch, updateCategories, onPaste,
+  categoryNames,
+  categories,
+  skills,
+  selected,
+  searchText,
+  lastCategory,
+  categorizedSkillSet,
+  uncategorized,
+  dispatch,
+  updateCategories,
+  onPaste,
 }: RootViewProps) {
   const isSearching = searchText.length > 0;
   const searchLower = searchText.toLowerCase();
 
   const categorizedSearchResults = isSearching
-    ? skills.filter((skill) => skill.toLowerCase().includes(searchLower) && categorizedSkillSet.has(skill))
+    ? skills.filter(
+        (skill) => skill.toLowerCase().includes(searchLower) && categorizedSkillSet.has(skill),
+      )
     : [];
 
   const filteredUncategorized = isSearching
@@ -40,11 +50,11 @@ export function RootView({
       searchBarPlaceholder="Filter skills..."
       selectedItemId={lastCategory ? `cat-${lastCategory}` : undefined}
       searchText={searchText}
-      onSearchTextChange={(text) => dispatch({ type: "search", text })}
+      onSearchTextChange={(text) => dispatch({ type: ACTION.SEARCH, text })}
       filtering={!isSearching}
     >
       {categoryNames.map((cat) => {
-        const catSkills = (categories[cat] ?? []).filter((skill) => skillsSet.has(skill));
+        const catSkills = (categories[cat] ?? []).filter((skill) => skills.includes(skill));
         if (catSkills.length === 0) return null;
         if (isSearching && !cat.toLowerCase().includes(searchLower)) return null;
         return (
@@ -68,7 +78,7 @@ export function RootView({
               key={`search-${skill}`}
               skill={skill}
               selected={selected}
-              onToggle={(s) => dispatch({ type: "toggle-skill", skill: s })}
+              onToggle={(s) => dispatch({ type: ACTION.TOGGLE_SKILL, skill: s })}
               onPaste={onPaste}
               categories={categories}
               onCategoriesChange={updateCategories}
@@ -84,7 +94,7 @@ export function RootView({
               key={skill}
               skill={skill}
               selected={selected}
-              onToggle={(s) => dispatch({ type: "toggle-skill", skill: s })}
+              onToggle={(s) => dispatch({ type: ACTION.TOGGLE_SKILL, skill: s })}
               onPaste={onPaste}
               categories={categories}
               onCategoriesChange={updateCategories}

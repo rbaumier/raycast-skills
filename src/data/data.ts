@@ -1,32 +1,28 @@
 /**
- * Data layer for skills and categories.
- *
+ * @description Data layer for skills and categories.
  * Skills are directories in ~/.claude/skills/.
  * Categories are stored as a JSON map in ~/.claude/skills/.categories.json.
- * A skill can belong to multiple categories. Uncategorized skills have no entry.
+ * A skill can belong to multiple categories.
  */
 import { readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
 import { Result } from "better-result";
 
-// --- Types ---
-
 export type Categories = Record<string, string[]>;
-
-// --- Constants ---
 
 export const SKILLS_DIR = join(homedir(), ".claude", "skills");
 const CATEGORIES_FILE = join(SKILLS_DIR, ".categories.json");
 const IGNORED = new Set([".DS_Store", "README.md", ".categories.json"]);
 const JSON_INDENT = 2;
 
-/** Alphabetical comparator for sorting strings by locale. */
+/** @description Alphabetical comparator for sorting strings by locale. */
 export const byName = (a: string, b: string) => a.localeCompare(b);
 
-// --- Validation ---
-
-/** Validates that parsed JSON conforms to the Categories shape. */
+/**
+ * @description Validates that parsed JSON conforms to the Categories shape.
+ * @example isCategories({ Frontend: ["react"] }) // true
+ */
 function isCategories(raw: unknown): raw is Categories {
   if (typeof raw !== "object" || raw === null || Array.isArray(raw)) return false;
   return Object.values(raw as Record<string, unknown>).every(
@@ -34,9 +30,10 @@ function isCategories(raw: unknown): raw is Categories {
   );
 }
 
-// --- Data access ---
-
-/** Reads skill directories from disk, filtering hidden/ignored entries. */
+/**
+ * @description Reads skill directories from disk, filtering hidden/ignored entries.
+ * @example loadSkills() // ["react", "vue", "tailwind"]
+ */
 export function loadSkills(): string[] {
   const result = Result.try(() =>
     readdirSync(SKILLS_DIR)
@@ -49,7 +46,10 @@ export function loadSkills(): string[] {
   return result.unwrapOr([]);
 }
 
-/** Reads and validates the categories JSON file. Returns empty map on any failure. */
+/**
+ * @description Reads and validates the categories JSON file. Returns empty map on any failure.
+ * @example loadCategories() // { Frontend: ["react", "vue"] }
+ */
 export function loadCategories(): Categories {
   const result = Result.try(() => {
     const raw: unknown = JSON.parse(readFileSync(CATEGORIES_FILE, "utf-8"));
@@ -59,7 +59,10 @@ export function loadCategories(): Categories {
   return result.unwrapOr({});
 }
 
-/** Persists categories to disk. Fails silently — stale data until next open. */
+/**
+ * @description Persists categories to disk. Fails silently — stale data until next open.
+ * @example saveCategories({ Frontend: ["react"] })
+ */
 export function saveCategories(categories: Categories): void {
   Result.try(() => writeFileSync(CATEGORIES_FILE, JSON.stringify(categories, null, JSON_INDENT)));
 }

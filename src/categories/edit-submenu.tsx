@@ -9,7 +9,12 @@ type EditCategoriesSubmenuProps = {
   onCategoriesChange: (categories: Categories) => void;
 };
 
-export function EditCategoriesSubmenu({ skill, categories, onCategoriesChange }: EditCategoriesSubmenuProps) {
+/** @description Toggle checkmarks to add/remove a skill from categories. */
+export function EditCategoriesSubmenu({
+  skill,
+  categories,
+  onCategoriesChange,
+}: EditCategoriesSubmenuProps) {
   const { push } = useNavigation();
   const categoryNames = Object.keys(categories).sort(byName);
 
@@ -27,16 +32,31 @@ export function EditCategoriesSubmenu({ skill, categories, onCategoriesChange }:
   }
 
   return (
-    <ActionPanel.Submenu title="Edit Categories" icon={Icon.Folder} shortcut={{ modifiers: ["cmd"], key: "e" }}>
+    <ActionPanel.Submenu
+      title="Edit Categories"
+      icon={Icon.Folder}
+      shortcut={{ modifiers: ["cmd"], key: "e" }}
+    >
       {categoryNames.map((cat) => {
         const isIn = (categories[cat] ?? []).includes(skill);
-        return <Action key={cat} title={cat} icon={isIn ? Icon.CheckCircle : Icon.Circle} onAction={() => toggleCategory(cat)} />;
+        return (
+          <Action
+            key={cat}
+            title={cat}
+            icon={isIn ? Icon.CheckCircle : Icon.Circle}
+            onAction={() => toggleCategory(cat)}
+          />
+        );
       })}
       <Action
         title="New Category..."
         icon={Icon.PlusCircle}
         shortcut={{ modifiers: ["cmd"], key: "n" }}
-        onAction={() => push(<NewCategoryForm skill={skill} categories={categories} onDone={onCategoriesChange} />)}
+        onAction={() =>
+          push(
+            <NewCategoryForm skill={skill} categories={categories} onDone={onCategoriesChange} />,
+          )
+        }
       />
     </ActionPanel.Submenu>
   );

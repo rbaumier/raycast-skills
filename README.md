@@ -1,18 +1,20 @@
 # Claude Skills Picker
 
-A Raycast extension to browse, organize, and paste [Claude Code](https://docs.anthropic.com/en/docs/claude-code) skills as a comma-separated list into any app.
+A Raycast extension to find, organize, and paste [Claude Code](https://docs.anthropic.com/en/docs/claude-code) skills into your conversation.
 
-## The Problem
+## Why
 
-Claude Code skills live as folders in `~/.claude/skills/`. When you have 50+ skills, remembering their exact names and typing `skill:react, skill:tailwind, skill:coding-standards` by hand is tedious and error-prone.
+Claude Code skills are powerful, but hard to use in practice. You have dozens of them in `~/.claude/skills/`, and during a conversation you need to remember their exact names to invoke them: `skill:react, skill:coding-standards, skill:language-typescript`.
 
-## The Solution
+Claude Code has a `/skill-name` command, but it only loads one skill at a time. For a React project you might need `react`, `coding-standards`, `language-typescript`, `tailwind`, `shadcn`, `testing` — and you have to remember which ones to load every time you start a conversation.
 
-Open Raycast, search skills visually, select what you need, paste. Done.
+You forget which skills you have. You misspell names. You waste time scrolling through a flat directory.
 
-```
-skill:react, skill:tailwind, skill:coding-standards
-```
+This extension lets you browse your skills visually, organize them into categories, select what you need, and paste the result directly into your Claude Code conversation.
+
+![Categories](assets/screenshots/categories.jpg)
+![Selection inside a folder](assets/screenshots/selection.jpg)
+![Paste result](assets/screenshots/paste-result.jpg)
 
 ## Features
 
@@ -34,6 +36,10 @@ Pick skills across folders. Selection persists as you navigate.
 |--------|----------|-------------|
 | Select/Deselect skill | `Enter` | Toggle individual skill |
 | Paste selected | `Cmd + Enter` | Paste all selected as `skill:x, skill:y` |
+
+### Search
+
+Type to search across all skills, including those inside folders. Entering a folder from search clears the query; going back restores it.
 
 ### Category Management
 
@@ -74,8 +80,14 @@ Categories are stored in `~/.claude/skills/.categories.json`:
 - Deleting a category does not delete the skills themselves
 - The file is human-editable
 
+## Tests
+
+```bash
+bun run test
+```
+
 ## Stack
 
 - [Raycast API](https://developers.raycast.com/) v1.93+
-- React, TypeScript
-- No external dependencies beyond Raycast SDK
+- React, TypeScript, [better-result](https://github.com/swan-io/boxed)
+- [Vitest](https://vitest.dev/) for testing

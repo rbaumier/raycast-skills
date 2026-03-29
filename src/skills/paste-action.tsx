@@ -1,4 +1,3 @@
-/** Reusable paste action — pastes N selected skills via ⌘+Enter. */
 import { Action, Icon } from "@raycast/api";
 
 type PasteActionProps = {
@@ -6,6 +5,7 @@ type PasteActionProps = {
   onPaste: () => Promise<void>;
 };
 
+/** @description Reusable paste action — pastes N selected skills via ⌘+Enter. */
 export function PasteAction({ count, onPaste }: PasteActionProps) {
   return (
     <Action

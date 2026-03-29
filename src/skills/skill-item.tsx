@@ -1,4 +1,3 @@
-/** Renders a single skill row with select, paste, and category actions. */
 import { Action, ActionPanel, Icon, List } from "@raycast/api";
 import type { Categories } from "../data/data";
 import { EditCategoriesSubmenu } from "../categories/edit-submenu";
@@ -13,7 +12,15 @@ type SkillItemProps = {
   onCategoriesChange: (categories: Categories) => void;
 };
 
-export function SkillItem({ skill, selected, onToggle, onPaste, categories, onCategoriesChange }: SkillItemProps) {
+/** @description Single skill row with select, paste, and category actions. */
+export function SkillItem({
+  skill,
+  selected,
+  onToggle,
+  onPaste,
+  categories,
+  onCategoriesChange,
+}: SkillItemProps) {
   const isSelected = selected.has(skill);
   return (
     <List.Item
@@ -23,9 +30,17 @@ export function SkillItem({ skill, selected, onToggle, onPaste, categories, onCa
       accessories={isSelected ? [{ tag: { value: "selected" } }] : []}
       actions={
         <ActionPanel>
-          <Action title={isSelected ? "Deselect" : "Select"} icon={Icon.CheckCircle} onAction={() => onToggle(skill)} />
+          <Action
+            title={isSelected ? "Deselect" : "Select"}
+            icon={Icon.CheckCircle}
+            onAction={() => onToggle(skill)}
+          />
           <PasteAction count={selected.size} onPaste={onPaste} />
-          <EditCategoriesSubmenu skill={skill} categories={categories} onCategoriesChange={onCategoriesChange} />
+          <EditCategoriesSubmenu
+            skill={skill}
+            categories={categories}
+            onCategoriesChange={onCategoriesChange}
+          />
         </ActionPanel>
       }
     />

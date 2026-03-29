@@ -1,4 +1,3 @@
-/** Form to create a new category and assign a skill to it. */
 import { Action, ActionPanel, Form, useNavigation } from "@raycast/api";
 import { type Categories, saveCategories } from "../data/data";
 
@@ -8,6 +7,7 @@ type NewCategoryFormProps = {
   onDone: (categories: Categories) => void;
 };
 
+/** @description Form to create a new category and assign a skill to it. */
 export function NewCategoryForm({ skill, categories, onDone }: NewCategoryFormProps) {
   const { pop } = useNavigation();
   return (
@@ -18,7 +18,10 @@ export function NewCategoryForm({ skill, categories, onDone }: NewCategoryFormPr
             title="Create Category"
             onSubmit={(values: { name: string }) => {
               const name = values.name.trim();
-              if (!name) { pop(); return; }
+              if (!name) {
+                pop();
+                return;
+              }
               const next = { ...categories };
               const list = next[name] ?? [];
               if (!list.includes(skill)) {

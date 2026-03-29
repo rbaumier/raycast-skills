@@ -7,50 +7,53 @@
 import { Clipboard, closeMainWindow, showHUD } from "@raycast/api";
 import { useEffect, useMemo, useReducer } from "react";
 import { byName, loadCategories, loadSkills } from "./data/data";
-import { initialState, pickerReducer } from "./data/state";
+import { ACTION, initialState, pickerReducer } from "./data/state";
 import { CategoryView } from "./categories/category-view";
 import { RootView } from "./root-view";
 
+/** @description Main entry point. Initializes reducer and routes to RootView or CategoryView. */
 export function PickSkills() {
   const [state, dispatch] = useReducer(pickerReducer, initialState);
-  const { selected, categories, skills, skillsSet, searchText, navigation } = state;
+  const { selected, categories, skills, searchText, navigation } = state;
 
   useEffect(() => {
-    dispatch({ type: "init", skills: loadSkills(), categories: loadCategories() });
+    dispatch({ type: ACTION.INIT, skills: loadSkills(), categories: loadCategories() });
   }, []);
-
-  // --- Derived data ---
 
   const categoryNames = useMemo(() => Object.keys(categories).sort(byName), [categories]);
 
   const categorizedSkillSet = useMemo(() => {
-    return new Set(categoryNames.flatMap((cat) => (categories[cat] ?? []).filter((skill) => skillsSet.has(skill))));
-  }, [categories, categoryNames, skillsSet]);
+    return new Set(
+      categoryNames.flatMap((cat) =>
+        (categories[cat] ?? []).filter((skill) => skills.includes(skill)),
+      ),
+    );
+  }, [categories, categoryNames, skills]);
 
   const uncategorized = useMemo(() => {
     return skills.filter((skill) => !categorizedSkillSet.has(skill));
   }, [skills, categorizedSkillSet]);
 
-  // --- Handlers ---
-
-  const updateCategories = (c: typeof categories) => dispatch({ type: "set-categories", categories: c });
+  const updateCategories = (c: typeof categories) =>
+    dispatch({ type: ACTION.SET_CATEGORIES, categories: c });
 
   async function pasteSelected() {
     if (selected.size === 0) return;
-    const text = [...selected].sort(byName).map((skill) => `skill:${skill}`).join(", ");
+    const text = [...selected]
+      .sort(byName)
+      .map((skill) => `skill:${skill}`)
+      .join(", ");
     await Clipboard.paste(text);
     await closeMainWindow();
     await showHUD(`Pasted ${selected.size} skill${selected.size > 1 ? "s" : ""}`);
   }
-
-  // --- Routing ---
 
   if (navigation.view === "category") {
     return (
       <CategoryView
         name={navigation.name}
         categories={categories}
-        skillsSet={skillsSet}
+        skills={skills}
         selected={selected}
         searchText={searchText}
         dispatch={dispatch}
@@ -65,7 +68,6 @@ export function PickSkills() {
       categoryNames={categoryNames}
       categories={categories}
       skills={skills}
-      skillsSet={skillsSet}
       selected={selected}
       searchText={searchText}
       lastCategory={navigation.lastCategory}

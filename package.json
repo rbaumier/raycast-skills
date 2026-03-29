@@ -15,7 +15,6 @@
   ],
   "dependencies": {
     "@raycast/api": "^1.93.2",
-    "@raycast/utils": "^1.19.1",
     "better-result": "^2.7.0"
   },
   "devDependencies": {
@@ -24,13 +23,15 @@
     "@types/react": "19.0.10",
     "eslint": "^8.57.1",
     "prettier": "^3.5.3",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "vitest": "^4.1.2"
   },
   "scripts": {
     "build": "ray build",
     "dev": "ray develop",
     "fix-lint": "ray lint --fix",
     "lint": "ray lint",
+    "test": "vitest run",
     "prepublishOnly": "echo \"Error: no publish\" && exit 1",
     "publish": "npx @raycast/api@latest publish"
   }
