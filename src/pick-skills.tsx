@@ -41,8 +41,9 @@ export function PickSkills() {
     if (selected.size === 0) return;
     const text = [...selected]
       .sort(byName)
-      .map((skill) => `skill:${skill}`)
+      .map((skill) => `/${skill}`)
       .join(", ");
+    await Clipboard.copy(text);
     await Clipboard.paste(text);
     await closeMainWindow();
     await showHUD(`Pasted ${selected.size} skill${selected.size > 1 ? "s" : ""}`);

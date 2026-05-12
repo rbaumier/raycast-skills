@@ -116,12 +116,12 @@ describe("saveCategories", () => {
 });
 
 describe("paste format", () => {
-  it("formats selected skills as sorted skill:X, skill:Y", () => {
+  it("formats selected skills as sorted /X, /Y", () => {
     const selected = new Set(["vue", "react", "tailwind"]);
     const text = [...selected]
       .sort(byName)
-      .map((skill) => `skill:${skill}`)
+      .map((skill) => `/${skill}`)
       .join(", ");
-    expect(text).toBe("skill:react, skill:tailwind, skill:vue");
+    expect(text).toBe("/react, /tailwind, /vue");
   });
 });
